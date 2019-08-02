@@ -32,13 +32,13 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "dwb_core/illegal_trajectory_tracker.hpp"
+#include "dwb_planner/illegal_trajectory_tracker.hpp"
 #include <map>
 #include <utility>
 #include <string>
 #include <sstream>
 
-namespace dwb_core
+namespace dwb_planner
 {
 void IllegalTrajectoryTracker::addIllegalTrajectory(const nav_core2::IllegalTrajectoryException & e)
 {
@@ -76,4 +76,4 @@ std::string IllegalTrajectoryTracker::getMessage() const
   return msg.str();
 }
 
-}  // namespace dwb_core
+}  // namespace dwb_planner

@@ -19,8 +19,8 @@
 #include <string>
 #include <thread>
 
-#include "dwb_core/common_types.hpp"
-#include "dwb_core/dwb_local_planner.hpp"
+#include "dwb_planner/common_types.hpp"
+#include "dwb_planner/dwb_local_planner.hpp"
 #include "nav_2d_msgs/msg/pose2_d_stamped.hpp"
 #include "nav_2d_utils/odom_subscriber.hpp"
 #include "nav2_util/lifecycle_node.hpp"
@@ -73,7 +73,7 @@ protected:
   rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr vel_publisher_;
 
   // The local planner
-  std::unique_ptr<dwb_core::DWBLocalPlanner> planner_;
+  std::unique_ptr<dwb_planner::DWBLocalPlanner> planner_;
 
   // An executor used to spin the costmap node
   std::unique_ptr<rclcpp::executors::SingleThreadedExecutor> costmap_executor_;

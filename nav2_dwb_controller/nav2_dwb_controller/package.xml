@@ -13,7 +13,7 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>costmap_queue</depend>
-  <depend>dwb_core</depend>
+  <depend>dwb_planner</depend>
   <depend>dwb_critics</depend>
   <depend>dwb_msgs</depend>
   <depend>dwb_plugins</depend>

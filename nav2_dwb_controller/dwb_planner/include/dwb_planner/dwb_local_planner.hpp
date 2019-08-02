@@ -32,23 +32,23 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DWB_CORE__DWB_LOCAL_PLANNER_HPP_
-#define DWB_CORE__DWB_LOCAL_PLANNER_HPP_
+#ifndef DWB_PLANNER__DWB_LOCAL_PLANNER_HPP_
+#define DWB_PLANNER__DWB_LOCAL_PLANNER_HPP_
 
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "dwb_core/goal_checker.hpp"
-#include "dwb_core/publisher.hpp"
-#include "dwb_core/trajectory_critic.hpp"
-#include "dwb_core/trajectory_generator.hpp"
+#include "nav2_interface/goal_checker.hpp"
+#include "dwb_planner/publisher.hpp"
+#include "dwb_planner/trajectory_critic.hpp"
+#include "dwb_planner/trajectory_generator.hpp"
 #include "nav_2d_msgs/msg/pose2_d_stamped.hpp"
 #include "nav_2d_msgs/msg/twist2_d_stamped.hpp"
 #include "nav2_util/lifecycle_node.hpp"
 #include "pluginlib/class_loader.hpp"
 
-namespace dwb_core
+namespace dwb_planner
 {
 
 /**
@@ -210,6 +210,6 @@ protected:
   std::vector<TrajectoryCritic::Ptr> critics_;
 };
 
-}  // namespace dwb_core
+}  // namespace dwb_planner
 
-#endif  // DWB_CORE__DWB_LOCAL_PLANNER_HPP_
+#endif  // DWB_PLANNER__DWB_LOCAL_PLANNER_HPP_

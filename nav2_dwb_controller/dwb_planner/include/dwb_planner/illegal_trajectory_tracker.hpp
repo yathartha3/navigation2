@@ -32,15 +32,15 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DWB_CORE__ILLEGAL_TRAJECTORY_TRACKER_HPP_
-#define DWB_CORE__ILLEGAL_TRAJECTORY_TRACKER_HPP_
+#ifndef DWB_PLANNER__ILLEGAL_TRAJECTORY_TRACKER_HPP_
+#define DWB_PLANNER__ILLEGAL_TRAJECTORY_TRACKER_HPP_
 
 #include <map>
 #include <utility>
 #include <string>
-#include "dwb_core/exceptions.hpp"
+#include "dwb_planner/exceptions.hpp"
 
-namespace dwb_core
+namespace dwb_planner
 {
 class IllegalTrajectoryTracker
 {
@@ -72,6 +72,6 @@ public:
   IllegalTrajectoryTracker tracker_;
 };
 
-}  // namespace dwb_core
+}  // namespace dwb_planner
 
-#endif  // DWB_CORE__ILLEGAL_TRAJECTORY_TRACKER_HPP_
+#endif  // DWB_PLANNER__ILLEGAL_TRAJECTORY_TRACKER_HPP_

@@ -38,9 +38,9 @@
 #include <utility>
 #include <vector>
 
-#include "dwb_core/dwb_local_planner.hpp"
-#include "dwb_core/exceptions.hpp"
-#include "dwb_core/illegal_trajectory_tracker.hpp"
+#include "dwb_planner/dwb_local_planner.hpp"
+#include "dwb_planner/exceptions.hpp"
+#include "dwb_planner/illegal_trajectory_tracker.hpp"
 #include "dwb_msgs/msg/critic_score.hpp"
 #include "nav_2d_msgs/msg/twist2_d.hpp"
 #include "nav_2d_utils/conversions.hpp"
@@ -50,7 +50,7 @@
 #include "pluginlib/class_list_macros.hpp"
 #include "nav2_util/duration_conversions.hpp"
 
-namespace dwb_core
+namespace dwb_planner
 {
 
 DWBLocalPlanner::DWBLocalPlanner(
@@ -59,9 +59,9 @@ DWBLocalPlanner::DWBLocalPlanner(
 : node_(node),
   tf_(tf),
   costmap_ros_(costmap_ros),
-  traj_gen_loader_("dwb_core", "dwb_core::TrajectoryGenerator"),
-  goal_checker_loader_("dwb_core", "dwb_core::GoalChecker"),
-  critic_loader_("dwb_core", "dwb_core::TrajectoryCritic")
+  traj_gen_loader_("dwb_planner", "dwb_planner::TrajectoryGenerator"),
+  goal_checker_loader_("nav2_interface", "nav2_interface::GoalChecker"),
+  critic_loader_("dwb_planner", "dwb_planner::TrajectoryCritic")
 {
   node_->declare_parameter("critics");
   node_->declare_parameter("prune_plan", rclcpp::ParameterValue(true));
@@ -570,7 +570,7 @@ DWBLocalPlanner::transformGlobalPlan(
   return transformed_plan;
 }
 
-}  // namespace dwb_core
+}  // namespace dwb_planner
 
 // Register this planner as a LocalPlanner plugin
-// PLUGINLIB_EXPORT_CLASS(dwb_core::DWBLocalPlanner, nav_core2::LocalPlanner)
+// PLUGINLIB_EXPORT_CLASS(dwb_planner::DWBLocalPlanner, nav2_interface::LocalPlannerInterface)

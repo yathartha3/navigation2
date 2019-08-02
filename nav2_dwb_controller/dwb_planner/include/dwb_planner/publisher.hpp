@@ -32,15 +32,15 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DWB_CORE__PUBLISHER_HPP_
-#define DWB_CORE__PUBLISHER_HPP_
+#ifndef DWB_PLANNER__PUBLISHER_HPP_
+#define DWB_PLANNER__PUBLISHER_HPP_
 
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "dwb_core/common_types.hpp"
-#include "dwb_core/trajectory_critic.hpp"
+#include "nav2_interface/common_types.hpp"
+#include "dwb_planner/trajectory_critic.hpp"
 #include "dwb_msgs/msg/local_plan_evaluation.hpp"
 #include "nav2_util/lifecycle_helper_interface.hpp"
 #include "nav_msgs/msg/path.hpp"
@@ -51,7 +51,7 @@
 
 using rclcpp_lifecycle::LifecyclePublisher;
 
-namespace dwb_core
+namespace dwb_planner
 {
 
 /**
@@ -132,6 +132,6 @@ protected:
   nav2_util::LifecycleNode::SharedPtr node_;
 };
 
-}  // namespace dwb_core
+}  // namespace dwb_planner
 
-#endif  // DWB_CORE__PUBLISHER_HPP_
+#endif  // DWB_PLANNER__PUBLISHER_HPP_

@@ -32,8 +32,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DWB_CORE__TRAJECTORY_GENERATOR_HPP_
-#define DWB_CORE__TRAJECTORY_GENERATOR_HPP_
+#ifndef DWB_PLANNER__TRAJECTORY_GENERATOR_HPP_
+#define DWB_PLANNER__TRAJECTORY_GENERATOR_HPP_
 
 #include <vector>
 #include <memory>
@@ -42,7 +42,7 @@
 #include "dwb_msgs/msg/trajectory2_d.hpp"
 #include "nav2_util/lifecycle_node.hpp"
 
-namespace dwb_core
+namespace dwb_planner
 {
 
 /**
@@ -63,7 +63,7 @@ namespace dwb_core
 class TrajectoryGenerator
 {
 public:
-  typedef std::shared_ptr<dwb_core::TrajectoryGenerator> Ptr;
+  typedef std::shared_ptr<dwb_planner::TrajectoryGenerator> Ptr;
 
   virtual ~TrajectoryGenerator() {}
 
@@ -122,6 +122,7 @@ public:
     const nav_2d_msgs::msg::Twist2D & cmd_vel) = 0;
 };
 
-}  // namespace dwb_core
+}  // namespace dwb_planner
 
-#endif  // DWB_CORE__TRAJECTORY_GENERATOR_HPP_
+
+#endif  // DWB_PLANNER__TRAJECTORY_GENERATOR_HPP_

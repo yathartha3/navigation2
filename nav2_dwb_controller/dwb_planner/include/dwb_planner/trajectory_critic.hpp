@@ -32,15 +32,15 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DWB_CORE__TRAJECTORY_CRITIC_HPP_
-#define DWB_CORE__TRAJECTORY_CRITIC_HPP_
+#ifndef DWB_PLANNER__TRAJECTORY_CRITIC_HPP_
+#define DWB_PLANNER__TRAJECTORY_CRITIC_HPP_
 
 #include <string>
 #include <vector>
 #include <memory>
 
 #include "rclcpp/rclcpp.hpp"
-#include "dwb_core/common_types.hpp"
+#include "nav2_interface/common_types.hpp"
 #include "geometry_msgs/msg/pose2_d.hpp"
 #include "nav_2d_msgs/msg/twist2_d.hpp"
 #include "nav_2d_msgs/msg/path2_d.hpp"
@@ -48,7 +48,7 @@
 #include "sensor_msgs/msg/point_cloud.hpp"
 #include "nav2_util/lifecycle_node.hpp"
 
-namespace dwb_core
+namespace dwb_planner
 {
 /**
  * @class TrajectoryCritic
@@ -77,7 +77,7 @@ namespace dwb_core
 class TrajectoryCritic
 {
 public:
-  typedef std::shared_ptr<dwb_core::TrajectoryCritic> Ptr;
+  typedef std::shared_ptr<dwb_planner::TrajectoryCritic> Ptr;
 
   virtual ~TrajectoryCritic() {}
 
@@ -179,6 +179,6 @@ protected:
   nav2_util::LifecycleNode::SharedPtr nh_;
 };
 
-}  // namespace dwb_core
+}  // namespace dwb_planner
 
-#endif  // DWB_CORE__TRAJECTORY_CRITIC_HPP_
+#endif  // DWB_PLANNER__TRAJECTORY_CRITIC_HPP_

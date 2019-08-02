@@ -32,7 +32,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "dwb_core/publisher.hpp"
+#include "dwb_planner/publisher.hpp"
 
 #include <algorithm>
 #include <memory>
@@ -47,7 +47,7 @@
 using std::max;
 using std::string;
 
-namespace dwb_core
+namespace dwb_planner
 {
 
 DWBPublisher::DWBPublisher(nav2_util::LifecycleNode::SharedPtr node)
@@ -299,4 +299,4 @@ DWBPublisher::addDeleteMarkers(
   }
 }
 
-}  // namespace dwb_core
+}  // namespace dwb_planner
