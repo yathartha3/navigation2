@@ -128,7 +128,8 @@ class NavigationTaskEnv(Turtlebot3Environment):
         return reward, self.done
 
     def set_random_robot_pose(self):
-        self.set_entity_state_pose('turtlebot3_waffle', self.get_random_pose())
+        self.robot_reset_random_pose = self.get_random_pose()
+        self.set_entity_state_pose('turtlebot3_waffle', self.robot_reset_random_pose)
 
     def set_random_goal_pose(self):
         '''
@@ -146,8 +147,8 @@ class NavigationTaskEnv(Turtlebot3Environment):
         random_pose.position.z = 0.0
         random_pose.orientation.x = 0.0
         random_pose.orientation.y = 0.0
-        random_pose.orientation.z = sin(yaw * 0.5)
-        random_pose.orientation.w = cos(yaw * 0.5)
+        random_pose.orientation.z = 0.0#sin(yaw * 0.5)
+        random_pose.orientation.w = 1.0#cos(yaw * 0.5)
         
         print(str(random_pose.position.x) + " " + str(random_pose.position.y))
 
@@ -207,6 +208,8 @@ class NavigationTaskEnv(Turtlebot3Environment):
         self.reset_tb3_env()
         self.set_random_robot_pose()
         self.set_random_goal_pose()
+
+        self.send_transform(self.robot_reset_random_pose.position.x, self.robot_reset_random_pose.position.y)
 
         sleep(1.0)
         self.get_path()

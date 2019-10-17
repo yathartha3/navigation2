@@ -24,6 +24,7 @@ import parameters
 from geometry_msgs.msg import Twist, Pose
 from sensor_msgs.msg import LaserScan
 from gazebo_msgs.srv import GetEntityState
+from tf2_ros import TransformStamped, TransformBroadcaster
 
 class Turtlebot3Environment(GazeboInterface):
     def __init__(self):
@@ -45,9 +46,10 @@ class Turtlebot3Environment(GazeboInterface):
         self.goal_pose = Pose()
 
         self.pub_cmd_vel = self.node_.create_publisher(Twist, 'cmd_vel', 1)
-        self.sub_scan = self.node_.create_subscription(LaserScan, '/turtlebot3_laserscan/out', self.scan_callback,
+        self.sub_scan = self.node_.create_subscription(LaserScan, '/scan', self.scan_callback,
                                                        qos_profile_sensor_data)
         self.scan_msg_received = False
+        self.tf_broadcaster = TransformBroadcaster(self.node_)
 
     def scan_callback(self, LaserScan):
         self.scan_msg_received = True
@@ -99,6 +101,7 @@ class Turtlebot3Environment(GazeboInterface):
         future = self.get_entity_state.call_async(req)
 
         while not future.done() and rclpy.ok():
+            print(self.time_factor)
             sleep(0.01 / self.time_factor)
 
         self.current_pose.position = future.result().state.pose.position
@@ -109,7 +112,12 @@ class Turtlebot3Environment(GazeboInterface):
         self.stop_action()
         self.reset_gazebo_world()
 
+        # debugging
+        self.reset_gazebo_simulation()
+        self.send_transform()
+
         self.time_factor = self.get_time_factor()
+        print(self.time_factor)
         self.scan_msg_received = False
 
         self.stop_action()
@@ -141,9 +149,51 @@ class Turtlebot3Environment(GazeboInterface):
         self.pub_cmd_vel.publish(vel_cmd)
         vel_cmd.linear.x = 0.0
         vel_cmd.angular.z = 0.0
+        print(self.time_factor)
         sleep(parameters.LOOP_RATE / self.time_factor)
         get_reward = self.compute_reward()
         # Pause environment
         self.pause_gazebo_world()
 
         return self.observation(), get_reward[0], self.done, {}
+
+    # def send_transform(self):
+    #     static_transformStamped = TransformStamped()
+    #     current_time = self.node_._clock.now()
+
+    #     static_transformStamped.header.stamp = current_time.to_msg()
+    #     static_transformStamped.header.frame_id = "map"
+    #     static_transformStamped.child_frame_id = "odom"
+
+    #     static_transformStamped.transform.translation.x =0.0
+    #     static_transformStamped.transform.translation.y =0.0
+    #     static_transformStamped.transform.translation.z =0.0
+
+    #     static_transformStamped.transform.rotation.x =0.0
+    #     static_transformStamped.transform.rotation.y =0.0
+    #     static_transformStamped.transform.rotation.z =0.0
+    #     static_transformStamped.transform.rotation.w =1.0
+
+    #     self.tf_broadcaster.sendTransform(static_transformStamped)
+    #     print("transform sent")
+
+    def send_transform(self, x=-2.0, y=-0.5):
+        static_transformStamped = TransformStamped()
+        current_time = self.node_._clock.now()
+
+        static_transformStamped.header.stamp = current_time.to_msg()
+        static_transformStamped.header.frame_id = "odom"
+        static_transformStamped.child_frame_id = "base_footprint"
+
+        static_transformStamped.transform.translation.x = x
+        static_transformStamped.transform.translation.y = y
+        static_transformStamped.transform.translation.z =0.0
+
+        static_transformStamped.transform.rotation.x =0.0
+        static_transformStamped.transform.rotation.y =0.0
+        static_transformStamped.transform.rotation.z =0.0
+        static_transformStamped.transform.rotation.w =1.0
+
+        self.tf_broadcaster.sendTransform(static_transformStamped)
+        print("transform sent")
+
