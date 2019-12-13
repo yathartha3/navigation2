@@ -1,0 +1,12 @@
+<class_libraries>
+  <library path="nav2_controller_plugin">
+    <class type="nav2_controller_plugins::SimpleGoalChecker" base_class_type="nav2_core::GoalChecker">
+      <description></description>
+    </class>
+  </library>
+  <library path="nav2_controller_plugin">
+    <class type="nav2_controller_plugins::StoppedGoalChecker" base_class_type="nav2_core::GoalChecker">
+      <description></description>
+    </class>
+  </library>
+</class_libraries>

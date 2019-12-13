@@ -22,6 +22,7 @@
 #include <vector>
 
 #include "nav2_core/local_planner.hpp"
+#include "nav2_core/goal_checker.hpp"
 #include "nav2_costmap_2d/costmap_2d_ros.hpp"
 #include "tf2_ros/transform_listener.h"
 #include "nav2_msgs/action/follow_path.hpp"
@@ -172,9 +173,16 @@ protected:
   std::vector<std::string> controller_ids_, controller_types_;
   std::string controller_ids_concat_, current_controller_;
 
+  // Goal checker plugins
+  pluginlib::ClassLoader<nav2_core::GoalChecker> goal_checker_loader_;
+  nav2_core::GoalChecker::Ptr goal_checker_;
+
   std::unique_ptr<ProgressChecker> progress_checker_;
 
   double controller_frequency_;
+
+  // Final goal pose in the path for goal checker and printing
+  geometry_msgs::msg::PoseStamped end_pose;
 
   // Whether we've published the single controller warning yet
   bool single_controller_warning_given_{false};

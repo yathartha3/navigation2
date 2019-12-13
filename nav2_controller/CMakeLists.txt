@@ -30,7 +30,12 @@ set(library_name ${executable_name}_core)
 add_library(${library_name}
   src/nav2_controller.cpp
   src/progress_checker.cpp
+  nav2_controller_plugins/src/simple_goal_checker.cpp
+  nav2_controller_plugins/src/stopped_goal_checker.cpp
 )
+
+# prevent pluginlib from using boost
+target_compile_definitions(${executable_name}_core PUBLIC "PLUGINLIB__DISABLE_BOOST_FUNCTIONS")
 
 target_compile_definitions(${library_name} PUBLIC "PLUGINLIB__DISABLE_BOOST_FUNCTIONS")
 
@@ -73,5 +78,7 @@ endif()
 
 ament_export_include_directories(include)
 ament_export_libraries(${library_name})
+
+pluginlib_export_plugin_description_file(nav2_controller nav2_controller_plugins.xml)
 
 ament_package()

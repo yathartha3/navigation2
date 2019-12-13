@@ -102,10 +102,10 @@ void DWBLocalPlanner::configure(
   pub_->on_configure();
 
   traj_generator_ = traj_gen_loader_.createUniqueInstance(traj_generator_name);
-  goal_checker_ = goal_checker_loader_.createUniqueInstance(goal_checker_name);
+  goal_checker_ = goal_checker_loader_.createUniqueInstance(goal_checker_name); // REMOVE THIS
 
   traj_generator_->initialize(node_);
-  goal_checker_->initialize(node_);
+  goal_checker_->initialize(node_); // REMOVE THIS
 
   try {
     loadCritics();
@@ -133,7 +133,7 @@ DWBLocalPlanner::cleanup()
   pub_->on_cleanup();
 
   traj_generator_.reset();
-  goal_checker_.reset();
+  goal_checker_.reset();  // REMOVE THIS
 }
 
 std::string
@@ -236,10 +236,12 @@ DWBLocalPlanner::loadBackwardsCompatibleParameters()
 }
 
 bool
-DWBLocalPlanner::isGoalReached(
+DWBLocalPlanner::isGoalReached(  // remove this function
   const geometry_msgs::msg::PoseStamped & pose,
   const geometry_msgs::msg::Twist & velocity)
 {
+  RCLCPP_WARN(rclcpp::get_logger(
+      "DWBLocalPlanner"), "Cannot check if the goal is reached without the goal being set!");
   if (global_plan_.poses.size() == 0) {
     RCLCPP_WARN(rclcpp::get_logger(
         "DWBLocalPlanner"), "Cannot check if the goal is reached without the goal being set!");
@@ -257,6 +259,7 @@ DWBLocalPlanner::isGoalReached(
   nav_2d_utils::transformPose(tf_, costmap_ros_->getGlobalFrameID(), goal_pose2d,
     local_goal_pose2d, transform_tolerance_);
 
+  // nav2_dwb_controller uses 2d pose message, however in rest of the stack 3d pose message is used.
   geometry_msgs::msg::PoseStamped local_start_pose, local_goal_pose;
   local_start_pose = nav_2d_utils::pose2DToPoseStamped(local_start_pose2d);
   local_goal_pose = nav_2d_utils::pose2DToPoseStamped(local_goal_pose2d);

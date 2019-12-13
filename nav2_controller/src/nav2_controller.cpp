@@ -23,6 +23,8 @@
 #include "nav2_controller/progress_checker.hpp"
 #include "nav2_controller/nav2_controller.hpp"
 
+using nav2_util::declare_parameter_if_not_declared;
+
 using namespace std::chrono_literals;
 
 namespace nav2_controller
@@ -30,7 +32,8 @@ namespace nav2_controller
 
 ControllerServer::ControllerServer()
 : LifecycleNode("controller_server", "", true),
-  lp_loader_("nav2_core", "nav2_core::LocalPlanner")
+  lp_loader_("nav2_core", "nav2_core::LocalPlanner"),
+  goal_checker_loader_("nav2_core", "nav2_core::GoalChecker")
 {
   RCLCPP_INFO(get_logger(), "Creating controller server");
 
@@ -48,6 +51,7 @@ ControllerServer::ControllerServer()
 
   // Launch a thread to run the costmap node
   costmap_thread_ = std::make_unique<nav2_util::NodeThread>(costmap_ros_);
+  RCLCPP_INFO(get_logger(), "###### Controller server constructor done"); //remove this
 }
 
 ControllerServer::~ControllerServer()
@@ -65,6 +69,16 @@ ControllerServer::on_configure(const rclcpp_lifecycle::State & state)
   auto node = shared_from_this();
 
   progress_checker_ = std::make_unique<ProgressChecker>(rclcpp_node_);
+
+  // Get goal checker plugin name, and initialize it
+  declare_parameter_if_not_declared(node, "goal_checker_name",
+    rclcpp::ParameterValue(std::string("nav2_controller_plugins::SimpleGoalChecker")));
+  std::string goal_checker_name;
+  node->get_parameter("goal_checker_name", goal_checker_name);
+  goal_checker_ = goal_checker_loader_.createUniqueInstance(goal_checker_name);
+  goal_checker_->initialize(node);
+
+  RCLCPP_INFO(get_logger(), "###### Controller server on configure goal checker initialized done"); //remove this
 
   if (controller_types_.size() != controller_ids_.size()) {
     RCLCPP_FATAL(get_logger(), "Size of controller names (%i) and "
@@ -160,6 +174,7 @@ ControllerServer::on_cleanup(const rclcpp_lifecycle::State & state)
 
   vel_publisher_.reset();
   action_server_.reset();
+  goal_checker_.reset();
 
   return nav2_util::CallbackReturn::SUCCESS;
 }
@@ -231,6 +246,7 @@ void ControllerServer::computeControl()
 
       computeAndPublishVelocity();
 
+      // Calls nav2_controller::isGoalReached, which then calls the plugin's isGoalReached
       if (isGoalReached()) {
         RCLCPP_INFO(get_logger(), "Reached the goal!");
         break;
@@ -262,7 +278,7 @@ void ControllerServer::setPlannerPath(const nav_msgs::msg::Path & path)
     "Providing path to the controller %s", current_controller_);
   controllers_[current_controller_]->setPlan(path);
 
-  auto end_pose = *(path.poses.end() - 1);
+  end_pose = *(path.poses.end() - 1);
 
   RCLCPP_DEBUG(get_logger(), "Path end point is (%.2f, %.2f)",
     end_pose.pose.position.x, end_pose.pose.position.y);
@@ -321,7 +337,12 @@ bool ControllerServer::isGoalReached()
   }
 
   geometry_msgs::msg::Twist velocity = nav_2d_utils::twist2Dto3D(odom_sub_->getTwist());
-  return controllers_[current_controller_]->isGoalReached(pose, velocity);
+  //return goal_checker_->isGoalReached(pose, velocity);
+
+  // pose is the local_start_pose
+  // need to get the local_goal_pose
+  return goal_checker_->isGoalReached(pose.pose, end_pose.pose, velocity);
+  //return controllers_[current_controller_]->isGoalReached(pose, velocity); // remove this
 }
 
 bool ControllerServer::getRobotPose(geometry_msgs::msg::PoseStamped & pose)
